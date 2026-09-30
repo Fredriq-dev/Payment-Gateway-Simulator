@@ -1,4 +1,4 @@
-/** OWNER: Person 3 (Payments) */
+
 const express = require("express");
 const catchAsync = require("../Utility/catchAsync");
 const { body } = require("express-validator");
