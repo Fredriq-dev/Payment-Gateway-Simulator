@@ -12,6 +12,28 @@ const rateLimiter = require("./Middleware/rateLimiter");
 const errorHandler = require("./Middleware/errorHandler");
 const AppError = require("./Utility/AppError");
 
+// the shared PostgreSQL pool
+const pool = require("./Config/databaseConfig");
+
+// fail fast if required environment variables are missing
+   const requiredEnvVars = ["DATABASE_URL","JWT_SECRET", "JWT_EXPIRES_IN", "CHECKOUT_BASE_URL", "TRANSACTION_EXPIRY_MINUTES", "WEBHOOK_MAX_ATTEMPTS"];
+const missingEnvVars = requiredEnvVars.filter((key) => !process.env[key]);
+if (missingEnvVars.length) {
+  console.error(`Missing required env vars: ${missingEnvVars.join(", ")}`);
+  process.exit(1);
+}
+
+// confirms the database is reachable
+const testDBConnection = async () => {
+  try {
+    const { rows } = await pool.query("SELECT NOW()");
+    console.log("PostgreSQL connected at:", rows[0].now);
+  } catch (err) {
+    console.error("PostgreSQL connection failed:", err.message);
+    process.exit(1);
+  }
+};
+
 const app = express();
 
 app.use(helmet());
@@ -39,8 +61,12 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
+
+// test the database first, then start listening
 if (require.main === module) {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  testDBConnection().then(() => {
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  });
 }
 
 module.exports = app;
