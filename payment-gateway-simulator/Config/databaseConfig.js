@@ -5,7 +5,7 @@
  *   const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
  */
 require("dotenv").config();
-const { Pool } = require("pg");
+const { Pool } = require("pg").types.setTypeParser(20, Number);
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
