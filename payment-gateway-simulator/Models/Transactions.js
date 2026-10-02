@@ -266,10 +266,38 @@ const stats = async () => {
 
   return result.rows[0];
 };
+
+/**
+ * findCheckoutByReference(reference)
+ * -> { reference, business_name, amount, currency, status, expires_at } or undefined
+ * Used by the public checkout page. Joins users to get the merchant name.
+ */
+const findCheckoutByReference = async (reference) => {
+  const result = await pool.query(
+    `
+      SELECT
+        t.reference,
+        u.business_name,
+        t.amount,
+        t.currency,
+        t.status,
+        t.expires_at
+      FROM transactions t
+      JOIN users u ON u.id = t.merchant_id
+      WHERE t.reference = $1
+      LIMIT 1;
+    `,
+    [reference]
+  );
+
+  return result.rows[0];
+};
+
 module.exports = {
   create,
   findByReference,
   findById,
+  findCheckoutByReference,
   findByReferenceForUpdate,
   updateStatus,
   listByMerchant,
