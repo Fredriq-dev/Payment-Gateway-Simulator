@@ -1,0 +1,401 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+}
+
+.payment-container {
+  width: 90%;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.payment-container h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.payment-form input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.payment-form button,
+.success-container button {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.payment-form button:hover,
+.success-container button:hover {
+  background: #444;
+}
+
+.success-container {
+  text-align: center;
+}
+
+.success-container h1 {
+  margin-bottom: 15px;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: #222;
+  color: white;
+}
+
+.navbar h2 {
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+.home-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.home-content {
+  max-width: 600px;
+  padding: 40px;
+}
+
+.home-content h1 {
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.home-content p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.home-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.home-buttons button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.home-buttons button:hover {
+  background: #444;
+}
+.dashboard-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-content {
+  width: 90%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.dashboard-content h1 {
+  margin-bottom: 10px;
+}
+
+.dashboard-content > p {
+  margin-bottom: 30px;
+}
+
+.dashboard-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.dashboard-card {
+  flex: 1;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h2 {
+  margin-top: 0;
+}
+
+.dashboard-card p {
+  line-height: 1.5;
+}
+
+.dashboard-card button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.dashboard-card button:hover {
+  background: #444;
+}
+.transactions-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.transactions-content {
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.transactions-content > p {
+  margin-bottom: 25px;
+}
+
+.transaction-card {
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.transaction-card h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.transaction-card p {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-card button,
+.no-transaction button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.transaction-card button:hover,
+.no-transaction button:hover {
+  background: #444;
+}
+
+.no-transaction {
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.details-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.details-content {
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.details-card {
+  margin-top: 25px;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.details-card h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.details-card p {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.details-card p:last-child {
+  border-bottom: none;
+}
+
+.details-card span {
+  text-align: right;
+}
+
+.details-links {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+.payment-page {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.payment-page .payment-container {
+  margin: 30px auto;
+}
+.payment-description {
+  text-align: center;
+  color: #666;
+  margin-top: -10px;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+.payment-form button {
+  margin-top: 5px;
+  padding: 14px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+.auth-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  width: 90%;
+  max-width: 450px;
+  padding: 35px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.auth-card h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.auth-description {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.auth-card > p:last-child {
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .home-content {
+    padding: 25px;
+  }
+
+  .home-content h1 {
+    font-size: 28px;
+  }
+
+  .home-buttons {
+    flex-direction: column;
+  }
+
+  .dashboard-cards {
+    flex-direction: column;
+  }
+
+  .payment-container {
+    width: 80%;
+    padding: 25px;
+  }
+
+  .auth-card {
+    width: 80%;
+    padding: 25px;
+  }
+
+  .details-card p {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .details-card span {
+    text-align: left;
+  }
+
+  .details-links {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
