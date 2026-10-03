@@ -12,7 +12,7 @@ const TRANSACTION_STATUS = {
 
 const ROLES = { ADMIN: "admin", MERCHANT: "merchant" };
 
-const CURRENCIES = ["NGN", "USD", "GBP", "EUR"];
+const CURRENCIES = [ "NGN", "USD", "GBP", "EUR"];
 
 /**
  * Simulated test cards. Keys are card numbers with no spaces.

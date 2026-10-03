@@ -2,11 +2,20 @@
 const express = require("express");
 const catchAsync = require("../Utility/catchAsync");
 const { body } = require("express-validator");
-const controller = require("../Controllers/UserController");
+const UserController = require("../Controllers/UserController");
 const auth = require("../Middleware/auth");
 const validate = require("../Middleware/validate");
 
 const router = express.Router();
+
+// Public routes
+router.post('/register', UserController.register);
+router.post('/login', UserController.login);
+
+// Protected routes (JWT required)
+router.get('/profile', auth, UserController.profile);
+router.post('/regenerate-keys', auth, UserController.regenerateKeys);
+
 
 router.post(
   "/register",
@@ -16,18 +25,18 @@ router.post(
     body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
   ],
   validate,
-  catchAsync(controller.register)
+  catchAsync(UserController.register)
 );
 
 router.post(
   "/login",
   [body("email").isEmail(), body("password").notEmpty()],
   validate,
-  catchAsync(controller.login)
+  catchAsync(UserController.login)
 );
 
-router.get("/profile", auth, catchAsync(controller.getProfile));
-router.patch("/webhook-url", auth, [body("webhook_url").isURL({ require_tld: false })], validate, catchAsync(controller.updateWebhookUrl));
-router.post("/regenerate-keys", auth, catchAsync(controller.regenerateKeys));
+router.get("/profile", auth, catchAsync(UserController.getProfile));
+router.patch("/webhook-url", auth, [body("webhook_url").isURL({ require_tld: false })], validate, catchAsync(UserController.updateWebhookUrl));
+router.post("/regenerate-keys", auth, catchAsync(UserController.regenerateKeys));
 
 module.exports = router;
