@@ -5,7 +5,10 @@
  *   const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
  */
 require("dotenv").config();
-const { Pool } = require("pg").types.setTypeParser(20, Number);
+const { Pool, types } = require("pg");
+
+// BIGINT columns (like amount) come back as strings by default. Parse them as numbers.
+types.setTypeParser(20, Number);
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
