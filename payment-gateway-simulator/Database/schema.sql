@@ -67,3 +67,16 @@ CREATE TABLE IF NOT EXISTS webhook_logs (
   success BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+/*
+  Webhook delivery tracking (retries). Safe to run on an existing database:
+  every statement can be repeated without changing existing data.
+*/
+ALTER TABLE webhook_logs ADD COLUMN IF NOT EXISTS merchant_id UUID REFERENCES users(id) ON DELETE CASCADE;
+ALTER TABLE webhook_logs ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'pending';
+ALTER TABLE webhook_logs ADD COLUMN IF NOT EXISTS next_retry_at TIMESTAMPTZ;
+ALTER TABLE webhook_logs ADD COLUMN IF NOT EXISTS error_message TEXT;
+ALTER TABLE webhook_logs ALTER COLUMN transaction_id DROP NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_webhook_logs_merchant ON webhook_logs(merchant_id);
+CREATE INDEX IF NOT EXISTS idx_webhook_logs_due ON webhook_logs(status, next_retry_at);

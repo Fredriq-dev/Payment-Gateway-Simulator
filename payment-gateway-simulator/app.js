@@ -14,6 +14,7 @@ const AppError = require("./Utility/AppError");
 
 // the shared PostgreSQL pool
 const pool = require("./Config/databaseConfig");
+const WebhookService = require("./Services/WebhookService");
 
 // fail fast if required environment variables are missing
    const requiredEnvVars = ["DATABASE_URL","JWT_SECRET", "JWT_EXPIRES_IN", "CHECKOUT_BASE_URL", "TRANSACTION_EXPIRY_MINUTES", "WEBHOOK_MAX_ATTEMPTS"];
@@ -65,7 +66,11 @@ const PORT = process.env.PORT || 5000;
 // test the database first, then start listening
 if (require.main === module) {
   testDBConnection().then(() => {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+      // retries failed webhooks in the background
+      WebhookService.startRetryWorker();
+    });
   });
 }
 

@@ -10,13 +10,16 @@ const Users = require('../Models/Users');               // <-- check method name
 const EmailService = require('./EmailService');
 const { signPayload } = require('../Utility/signature');
 
+// Event names come from Config/constants.js so every part of the project agrees
+const { WEBHOOK_EVENTS } = require('../Config/constants');
+
 const EVENTS = {
-  CHARGE_SUCCESS: 'charge.success',
-  CHARGE_FAILED: 'charge.failed',
+  CHARGE_SUCCESS: WEBHOOK_EVENTS.SUCCESS,
+  CHARGE_FAILED: WEBHOOK_EVENTS.FAILED,
   TEST: 'webhook.test',
 };
 
-const MAX_ATTEMPTS = 5;
+const MAX_ATTEMPTS = Number(process.env.WEBHOOK_MAX_ATTEMPTS) || 5;
 const RETRY_DELAYS_SECONDS = [10, 60, 300, 900]; // wait after attempt 1, 2, 3, 4
 const TIMEOUT_MS = 8000;
 

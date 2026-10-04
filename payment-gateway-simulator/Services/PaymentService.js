@@ -24,7 +24,11 @@ const SimulatorService = require("./SimulatorService");
 const WebhookService = require("./WebhookService");
 const Transactions = require("../Models/Transactions");
 const TransactionEvents = require("../Models/TransactionEvents");
-const { TRANSACTION_STATUS, canTransition } = require("../Config/constants");
+const {
+  TRANSACTION_STATUS,
+  canTransition,
+  WEBHOOK_EVENT_BY_STATUS,
+} = require("../Config/constants");
 
 /** Runs work(client) inside BEGIN / COMMIT, rolls back on any error, always releases. */
 const withTransaction = async (work) => {
@@ -54,10 +58,13 @@ const lockPending = async (client, reference) => {
 
 const isExpired = (txn) => new Date(txn.expires_at) <= new Date();
 
-/** Fire and forget. Errors are logged, never thrown. */
-const notifyWebhook = (transactionId) => {
+/** Fire and forget. The event name comes from the final status. Errors are logged, never thrown. */
+const notifyWebhook = (transactionId, status) => {
+  const eventType = WEBHOOK_EVENT_BY_STATUS[status];
+  if (!eventType) return;
+
   Promise.resolve()
-    .then(() => WebhookService.dispatch(transactionId))
+    .then(() => WebhookService.dispatch(transactionId, eventType))
     .catch((err) => console.error("Webhook dispatch failed:", err.message));
 };
 
@@ -136,12 +143,12 @@ const processPayment = async (reference, card) => {
 
   // The expiry update is committed before the error is thrown, so it is kept.
   if (result.expired) {
-    notifyWebhook(result.expired.id);
+    notifyWebhook(result.expired.id, result.expired.status);
     throw new AppError("Transaction has expired", 410);
   }
 
   if (result.txn.status !== TRANSACTION_STATUS.PENDING) {
-    notifyWebhook(result.txn.id);
+    notifyWebhook(result.txn.id, result.txn.status);
   }
 
   return result.txn;
@@ -153,7 +160,7 @@ const cancelPayment = async (reference) => {
     return abandon(client, locked, "Cancelled by customer");
   });
 
-  notifyWebhook(txn.id);
+  notifyWebhook(txn.id, txn.status);
   return txn;
 };
 
