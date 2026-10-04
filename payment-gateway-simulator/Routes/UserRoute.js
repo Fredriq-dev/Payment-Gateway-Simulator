@@ -9,14 +9,6 @@ const validate = require("../Middleware/validate");
 const router = express.Router();
 
 // Public routes
-router.post('/register', UserController.register);
-router.post('/login', UserController.login);
-
-// Protected routes (JWT required)
-router.get('/profile', auth, UserController.profile);
-router.post('/regenerate-keys', auth, UserController.regenerateKeys);
-
-
 router.post(
   "/register",
   [
@@ -30,13 +22,22 @@ router.post(
 
 router.post(
   "/login",
-  [body("email").isEmail(), body("password").notEmpty()],
+  [body("email").isEmail().withMessage("Valid email is required"), body("password").notEmpty()],
   validate,
   catchAsync(UserController.login)
 );
 
+// Protected routes (JWT required)
 router.get("/profile", auth, catchAsync(UserController.getProfile));
-router.patch("/webhook-url", auth, [body("webhook_url").isURL({ require_tld: false })], validate, catchAsync(UserController.updateWebhookUrl));
+
+router.patch(
+  "/webhook-url",
+  auth,
+  [body("webhook_url").isURL({ require_tld: false }).withMessage("Valid URL is required")],
+  validate,
+  catchAsync(UserController.updateWebhookUrl)
+);
+
 router.post("/regenerate-keys", auth, catchAsync(UserController.regenerateKeys));
 
 module.exports = router;

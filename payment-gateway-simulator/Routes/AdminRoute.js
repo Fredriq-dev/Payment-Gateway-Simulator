@@ -6,16 +6,12 @@ const auth = require("../Middleware/auth");
 const role = require("../Middleware/role");
 
 const router = express.Router();
-const AdminController = require('../Controllers/AdminController');
 
+// Every admin route needs a valid JWT and the admin role.
 router.use(auth, role("admin"));
 
-// Admin-only routes
-router.get('/users', auth, role('admin'), AdminController.listUsers);
-router.get('/transactions', auth, role('admin'), AdminController.listTransactions);
-router.get('/stats', auth, role('admin'), AdminController.getStats);
-
-// router.get("/transactions", catchAsync(controller.listTransactions));
+router.get("/users", catchAsync(controller.listUsers));
+router.get("/transactions", catchAsync(controller.listTransactions));
 router.get("/stats", catchAsync(controller.getStats));
 
 module.exports = router;

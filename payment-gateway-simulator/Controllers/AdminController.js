@@ -1,57 +1,43 @@
 /**
  * OWNER: Person 2 (Accounts and Admin)
- * listTransactions: Transactions.listAll with filters from req.query
- * getStats: Transactions.stats (totals, success rate, total volume)
+ * listUsers:        every user, without keys or password hashes
+ * listTransactions: Transactions.listAll with filters from req.query (status, from, to, page, limit)
+ * getStats:         Transactions.stats (totals, success rate, total volume)
  */
+const Users = require("../Models/Users");
 const Transactions = require("../Models/Transactions");
 const { success } = require("../Utility/response");
-const notImplemented = require("../Utility/notImplemented");
-const pool = require('../Config/databaseConfig');
-const AppError = require('../Utility/AppError');
 
-// List all users (merchants + admins)
-exports.listUsers = async (req, res, next) => {
-  try {
-    const { rows } = await pool.query(
-      'SELECT id, email, role, public_key, secret_key, created_at FROM users ORDER BY created_at DESC'
-    );
-    res.json({ users: rows });
-  } catch (err) {
-    next(err);
-  }
+exports.listUsers = async (req, res) => {
+  const users = await Users.listAll();
+  return success(res, "Users retrieved", { users, total: users.length });
 };
 
-// List all transactions
-exports.listTransactions = async (req, res, next) => {
-  try {
-    const { rows } = await pool.query(
-      'SELECT * FROM transactions ORDER BY created_at DESC'
-    );
-    res.json({ transactions: rows });
-  } catch (err) {
-    next(err);
-  }
+exports.listTransactions = async (req, res) => {
+  const { status, from, to } = req.query;
+  const page = Number(req.query.page) || 1;
+  const limit = Math.min(Number(req.query.limit) || 20, 100);
+
+  const result = await Transactions.listAll({ status, from, to, page, limit });
+
+  return success(res, "Transactions retrieved", {
+    transactions: result.rows,
+    total: result.total,
+    page,
+    limit,
+  });
 };
 
-// Get system stats (counts, totals)
-exports.getStats = async (req, res, next) => {
-  try {
-    const userCountResult = await pool.query('SELECT COUNT(*) FROM users');
-    const txCountResult = await pool.query('SELECT COUNT(*) FROM transactions');
-    const txSumResult = await pool.query('SELECT COALESCE(SUM(amount),0) AS total_amount FROM transactions');
+exports.getStats = async (req, res) => {
+  const stats = await Transactions.stats();
+  const successRate = stats.total > 0 ? Math.round((stats.success / stats.total) * 1000) / 10 : 0;
 
-    const stats = {
-      totalUsers: parseInt(userCountResult.rows[0].count, 10),
-      totalTransactions: parseInt(txCountResult.rows[0].count, 10),
-      totalVolume: parseFloat(txSumResult.rows[0].total_amount)
-    };
-
-    res.json({ stats });
-  } catch (err) {
-    next(err);
-  }
+  return success(res, "Stats retrieved", {
+    total: stats.total,
+    success: stats.success,
+    failed: stats.failed,
+    pending: stats.pending,
+    success_rate: successRate,
+    volume: Number(stats.volume),
+  });
 };
-
-
-exports.listTransactions = async (req, res) => {notImplemented("AdminController.listTransactions")};
-exports.getStats = async (req, res) => { notImplemented("AdminController.getStats")};
